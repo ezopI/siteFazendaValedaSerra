@@ -16,7 +16,7 @@
       const supabaseUrl = window.FVS_SUPABASE_URL || '';
       const supabaseAnonKey = window.FVS_SUPABASE_ANON_KEY || '';
       const functionName = window.FVS_SUPABASE_FUNCTION || 'b2b-lead-submit';
-      const endpoint = `${supabaseUrl.replace(/\/$/, '')}/functions/v1/${functionName}`;
+      const endpoint = buildFunctionEndpoint(supabaseUrl, functionName);
       const card = form.closest('.farm-request-card, .card, .card-soft') || form.parentElement;
       const wrapper = card?.querySelector('.form-wrapper');
       const success = card?.querySelector('.form-success');
@@ -154,5 +154,16 @@
     if (startedAtField) {
       startedAtField.value = new Date().toISOString();
     }
+  }
+
+  function buildFunctionEndpoint(url, functionName) {
+    const normalizedUrl = String(url || '').replace(/\/$/, '');
+    if (!normalizedUrl) return '';
+
+    if (normalizedUrl.includes('/functions/v1/')) {
+      return normalizedUrl;
+    }
+
+    return `${normalizedUrl}/functions/v1/${functionName}`;
   }
 })();
